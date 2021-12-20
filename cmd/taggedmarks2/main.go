@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -10,17 +11,40 @@ import (
 	"github.com/bbkane/warg/section"
 	"github.com/bbkane/warg/value"
 
+	"github.com/bbkane/taggedmarks2"
 	"github.com/bbkane/taggedmarks2/moderncsqlitehandrolled"
 )
 
 func createTaggedmark(pf flag.PassedFlags) error {
 	dbPath := pf["--db-path"].(string)
+	url := pf["--url"].(string)
+	tagsFlag := []string{}
+	if tagsF, exists := pf["--tag"]; exists {
+		tagsFlag = tagsF.([]string)
+	}
 
 	ts, err := moderncsqlitehandrolled.NewTaggedmarkService(dbPath)
 	if err != nil {
 		return fmt.Errorf("db load errror: %w", err)
 	}
-	fmt.Println(ts)
+
+	tags := []*taggedmarks2.Tag{}
+	for _, t := range tagsFlag {
+		tags = append(tags, &taggedmarks2.Tag{Name: t})
+	}
+
+	tm := &taggedmarks2.Taggedmark{
+		URL:  url,
+		Tags: tags,
+	}
+
+	err = ts.CreateTaggedmark(context.Background(), tm)
+	if err != nil {
+		err = fmt.Errorf("createTaggedmark err: %w", err)
+		return err
+	}
+
+	fmt.Println(*tm)
 	return nil
 }
 
@@ -45,8 +69,8 @@ func main() {
 					createTaggedmark,
 					command.Flag(
 						"--tag",
-						"Tag to add",
-						value.String,
+						"Tags to add",
+						value.StringSlice,
 					),
 					command.Flag(
 						"--url",

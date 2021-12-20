@@ -10,12 +10,12 @@ type Tag struct {
 type Taggedmark struct {
 	ID   int
 	URL  string
-	Tags []Tag
+	Tags []*Tag
 }
 
 type TaggedmarkUpdate struct {
 	URL  string
-	Tags []Tag
+	Tags []*Tag
 }
 
 type TaggedmarkQuery struct {
