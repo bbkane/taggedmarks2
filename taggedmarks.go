@@ -1,16 +1,23 @@
 package taggedmarks2
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 type Tag struct {
-	ID   int
-	Name string
+	CreateTime time.Time
+	ID         int
+	Name       string
+	UpdateTime time.Time
 }
 
 type Taggedmark struct {
-	ID   int
-	URL  string
-	Tags []*Tag
+	CreateTime time.Time
+	ID         int
+	UpdateTime time.Time
+	URL        string
+	Tags       []*Tag
 }
 
 type TaggedmarkUpdate struct {

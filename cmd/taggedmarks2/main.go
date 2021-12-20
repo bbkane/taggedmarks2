@@ -23,6 +23,7 @@ func createTaggedmark(pf flag.PassedFlags) error {
 		tagsFlag = tagsF.([]string)
 	}
 
+	var ts taggedmarks2.TaggedmarkService
 	ts, err := moderncsqlitehandrolled.NewTaggedmarkService(dbPath)
 	if err != nil {
 		return fmt.Errorf("db load errror: %w", err)

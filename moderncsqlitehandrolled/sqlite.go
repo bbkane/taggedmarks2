@@ -59,8 +59,9 @@ func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmar
 		// then no IDs are returned with RETURNING. This means
 		// we always want to modify something so we can use this appoach :)
 
+		// TODO: this should be passed in :)
 		now := time.Now()
-		// nowSQL := (*NullTime)(&now)
+		nowSQL := (*NullTime)(&now)
 		// Insert basic information
 		{
 			err := tx.QueryRowContext(
@@ -77,9 +78,9 @@ func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmar
 				RETURNING id
 				`,
 				tm.URL,
-				(*NullTime)(&now),
-				(*NullTime)(&now),
-				(*NullTime)(&now),
+				nowSQL,
+				nowSQL,
+				nowSQL,
 			).Scan(&tm.ID)
 			if err != nil {
 				return fmt.Errorf("taggedmark initial insert err: %w", err)
@@ -102,9 +103,9 @@ func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmar
 				RETURNING id
 				`,
 				tm.Tags[i].Name,
-				(*NullTime)(&now),
-				(*NullTime)(&now),
-				(*NullTime)(&now),
+				nowSQL,
+				nowSQL,
+				nowSQL,
 			).Scan(&tm.Tags[i].ID)
 			if err != nil {
 				return fmt.Errorf("taggedmark tag upsert err: %w", err)
@@ -124,16 +125,14 @@ func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmar
 				`,
 				tm.ID,
 				tm.Tags[i].ID,
-				(*NullTime)(&now),
-				(*NullTime)(&now),
+				nowSQL,
+				nowSQL,
 			)
 			if err != nil {
 				return fmt.Errorf("taggedmark taggedmark_tag upsert err: %w", err)
 			}
 		}
-
 		return nil
-
 	})
 	if err != nil {
 		return fmt.Errorf("CreateTaggedmark err: %w", err)

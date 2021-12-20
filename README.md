@@ -43,6 +43,11 @@ The cmd/wtfd package instantiates an HTTP server (which does *NOT* fulfil the in
 
 Let's start with the interface idea. We want to CRUDL taggedmarks, and we can make interfaces for that, then make a hand-rolled SQL implementation of that and a cli package to drive it... but first, lunch!
 
+- pass times into CreateDial instead of generating them there
+- move cmd/taggedmarks2 into root, and root into new package model
+- Get auth working, errors working, metrics?
+- get HTTP working
+
 # Questions
 
 - should my Tag struct have a reference to Taggedmark?
