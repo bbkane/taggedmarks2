@@ -24,8 +24,8 @@ type TaggedmarkQuery struct {
 
 type TaggedmarkService interface {
 	CreateTaggedmark(ctx context.Context, tm *Taggedmark) error
-	ReadTaggedmark(ctx context.Context, id int) (*Taggedmark, error)
-	UpdateTaggedmark(ctx context.Context, id int, upd TaggedmarkUpdate) (*Taggedmark, error)
-	DeleteTaggedmark(ctx context.Context, id int) error
-	ListTaggedmarks(ctx context.Context, query TaggedmarkQuery) ([]*Taggedmark, error)
+	// ReadTaggedmark(ctx context.Context, id int) (*Taggedmark, error)
+	// UpdateTaggedmark(ctx context.Context, id int, upd TaggedmarkUpdate) (*Taggedmark, error)
+	// DeleteTaggedmark(ctx context.Context, id int) error
+	// ListTaggedmarks(ctx context.Context, query TaggedmarkQuery) ([]*Taggedmark, error)
 }
