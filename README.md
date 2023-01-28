@@ -13,6 +13,8 @@ I want to abstract the storage (and then use that to try different DB frameworks
 # Other things to Try
 
 - GraphQL with Ent? It would be nice generate the graphql code
+- https://simonwillison.net/2021/Jul/1/pagnis/
+- https://lukeplant.me.uk/blog/posts/yagni-exceptions/
 
 # Error Handling
 
