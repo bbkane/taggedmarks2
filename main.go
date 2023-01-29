@@ -12,9 +12,11 @@ import (
 	"go.bbkane.com/warg/value/scalar"
 	"go.bbkane.com/warg/value/slice"
 
-	"github.com/bbkane/taggedmarks2/moderncsqlitehandrolled"
-	taggedmarks "github.com/bbkane/taggedmarks2/taggedmarks"
+	"go.bbkane.com/taggedmarks2/moderncsqlite"
+	"go.bbkane.com/taggedmarks2/taggedmarks"
 )
+
+var version string
 
 func createTaggedmark(pf command.Context) error {
 	dbPath := pf.Flags["--db-path"].(string)
@@ -25,7 +27,7 @@ func createTaggedmark(pf command.Context) error {
 	}
 
 	var ts taggedmarks.TaggedmarkService
-	ts, err := moderncsqlitehandrolled.NewTaggedmarkService(dbPath)
+	ts, err := moderncsqlite.NewTaggedmarkService(dbPath)
 	if err != nil {
 		return fmt.Errorf("db load errror: %w", err)
 	}
@@ -84,6 +86,8 @@ func main() {
 				),
 			),
 		),
+		warg.AddColorFlag(),
+		warg.AddVersionCommand(version),
 	)
 
 	app.MustRun(os.Args, os.LookupEnv)

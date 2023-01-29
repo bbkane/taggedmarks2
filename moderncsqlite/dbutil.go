@@ -1,4 +1,4 @@
-package moderncsqlitehandrolled
+package moderncsqlite
 
 import (
 	"database/sql"

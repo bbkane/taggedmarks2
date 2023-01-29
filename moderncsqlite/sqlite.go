@@ -1,4 +1,4 @@
-package moderncsqlitehandrolled
+package moderncsqlite
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	taggedmarks "github.com/bbkane/taggedmarks2/taggedmarks"
+	"go.bbkane.com/taggedmarks2/taggedmarks"
 	_ "modernc.org/sqlite"
 )
 

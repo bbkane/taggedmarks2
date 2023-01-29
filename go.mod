@@ -1,4 +1,4 @@
-module github.com/bbkane/taggedmarks2
+module go.bbkane.com/taggedmarks2
 
 go 1.19
 

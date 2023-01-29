@@ -1,4 +1,4 @@
-package taggedmarks2
+package taggedmarks
 
 import (
 	"context"
