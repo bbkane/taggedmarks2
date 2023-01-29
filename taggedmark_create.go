@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"go.bbkane.com/warg/command"
 
@@ -24,14 +25,17 @@ func createTaggedmark(pf command.Context) error {
 		return fmt.Errorf("db load errror: %w", err)
 	}
 
+	now := time.Now()
 	tags := []*taggedmarks.Tag{}
 	for _, t := range tagsFlag {
-		tags = append(tags, &taggedmarks.Tag{Name: t})
+		tags = append(tags, &taggedmarks.Tag{Name: t, CreateTime: now, UpdateTime: now})
 	}
 
 	tm := &taggedmarks.Taggedmark{
-		URL:  url,
-		Tags: tags,
+		URL:        url,
+		Tags:       tags,
+		CreateTime: now,
+		UpdateTime: now,
 	}
 
 	err = ts.CreateTaggedmark(context.Background(), tm)

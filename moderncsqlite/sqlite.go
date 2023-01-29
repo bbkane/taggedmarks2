@@ -60,9 +60,10 @@ func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmar
 		// then no IDs are returned with RETURNING. This means
 		// we always want to modify something so we can use this appoach :)
 
-		// TODO: this should be passed in :)
-		now := time.Now()
-		nowSQL := (*NullTime)(&now)
+		tmCreateTime := (*NullTime)(&tm.CreateTime)
+		tmUpdateTime := (*NullTime)(&tm.UpdateTime)
+		var scannedTmCreateTime NullTime
+		var scannedTmUpdateTime NullTime
 		// Insert basic information
 		{
 			err := tx.QueryRowContext(
@@ -76,13 +77,15 @@ func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmar
 				VALUES (?, ?, ?)
 				ON CONFLICT(url)
 				DO UPDATE SET update_time = ?
-				RETURNING id
+				RETURNING id, create_time, update_time
 				`,
 				tm.URL,
-				nowSQL,
-				nowSQL,
-				nowSQL,
-			).Scan(&tm.ID)
+				tmCreateTime,
+				tmUpdateTime,
+				tmUpdateTime,
+			).Scan(&tm.ID, &scannedTmCreateTime, &scannedTmUpdateTime)
+			tm.CreateTime = (time.Time)(scannedTmCreateTime)
+			tm.UpdateTime = (time.Time)(scannedTmUpdateTime)
 			if err != nil {
 				return fmt.Errorf("taggedmark initial insert err: %w", err)
 			}
@@ -90,6 +93,10 @@ func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmar
 
 		// Loop through tags and INSERT or UPDATE each one
 		for i := 0; i < len(tm.Tags); i++ {
+			tagCreateTime := (*NullTime)(&tm.Tags[i].CreateTime)
+			tagUpdateTime := (*NullTime)(&tm.Tags[i].UpdateTime)
+			var scannedTagCreateTime NullTime
+			var scannedTagUpdateTime NullTime
 			err := tx.QueryRowContext(
 				ctx,
 				`
@@ -101,13 +108,15 @@ func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmar
 				VALUES(?, ?, ?)
 				ON CONFLICT (name)
 				DO UPDATE SET update_time = ?
-				RETURNING id
+				RETURNING id, create_time, update_time
 				`,
 				tm.Tags[i].Name,
-				nowSQL,
-				nowSQL,
-				nowSQL,
-			).Scan(&tm.Tags[i].ID)
+				tagCreateTime,
+				tagUpdateTime,
+				tagUpdateTime,
+			).Scan(&tm.Tags[i].ID, &scannedTagCreateTime, &scannedTagUpdateTime)
+			tm.Tags[i].CreateTime = time.Time(scannedTagCreateTime)
+			tm.Tags[i].UpdateTime = time.Time(scannedTagUpdateTime)
 			if err != nil {
 				return fmt.Errorf("taggedmark tag upsert err: %w", err)
 			}
@@ -126,8 +135,9 @@ func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmar
 				`,
 				tm.ID,
 				tm.Tags[i].ID,
-				nowSQL,
-				nowSQL,
+				// Use the bookmark create time
+				tmCreateTime,
+				tmUpdateTime,
 			)
 			if err != nil {
 				return fmt.Errorf("taggedmark taggedmark_tag upsert err: %w", err)
