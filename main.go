@@ -5,21 +5,22 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bbkane/warg"
-	"github.com/bbkane/warg/command"
-	"github.com/bbkane/warg/flag"
-	"github.com/bbkane/warg/section"
-	"github.com/bbkane/warg/value"
+	"go.bbkane.com/warg"
+	"go.bbkane.com/warg/command"
+	"go.bbkane.com/warg/flag"
+	"go.bbkane.com/warg/section"
+	"go.bbkane.com/warg/value/scalar"
+	"go.bbkane.com/warg/value/slice"
 
 	"github.com/bbkane/taggedmarks2/moderncsqlitehandrolled"
 	taggedmarks "github.com/bbkane/taggedmarks2/taggedmarks"
 )
 
-func createTaggedmark(pf flag.PassedFlags) error {
-	dbPath := pf["--db-path"].(string)
-	url := pf["--url"].(string)
+func createTaggedmark(pf command.Context) error {
+	dbPath := pf.Flags["--db-path"].(string)
+	url := pf.Flags["--url"].(string)
 	tagsFlag := []string{}
-	if tagsF, exists := pf["--tag"]; exists {
+	if tagsF, exists := pf.Flags["--tag"]; exists {
 		tagsFlag = tagsF.([]string)
 	}
 
@@ -57,8 +58,9 @@ func main() {
 			section.Flag(
 				"--db-path",
 				"Path to sqlite DB",
-				value.Path,
-				flag.Default("taggedmarks2.db"),
+				scalar.Path(
+					scalar.Default("taggedmarks2.db"),
+				),
 				flag.Required(),
 			),
 			section.Section(
@@ -71,12 +73,12 @@ func main() {
 					command.Flag(
 						"--tag",
 						"Tags to add",
-						value.StringSlice,
+						slice.String(),
 					),
 					command.Flag(
 						"--url",
 						"URL",
-						value.String,
+						scalar.String(),
 						flag.Required(),
 					),
 				),
