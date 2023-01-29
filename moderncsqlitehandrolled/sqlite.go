@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bbkane/taggedmarks2"
+	taggedmarks "github.com/bbkane/taggedmarks2/taggedmarks"
 	_ "modernc.org/sqlite"
 )
 
@@ -24,11 +24,12 @@ func NewTaggedmarkService(dsn string) (*TaggedmarkService, error) {
 		return nil, fmt.Errorf("db open error: %s: %w", dsn, err)
 	}
 
-	// Enable WAL. SQLite performs better with the WAL  because it allows
-	// multiple readers to operate while data is being written.
-	if _, err := db.Exec(`PRAGMA journal_mode = wal;`); err != nil {
-		return nil, fmt.Errorf("enable wal: %w", err)
-	}
+	// TODO: Re-enable this once I need the files I guess :)
+	// // Enable WAL. SQLite performs better with the WAL  because it allows
+	// // multiple readers to operate while data is being written.
+	// if _, err := db.Exec(`PRAGMA journal_mode = wal;`); err != nil {
+	// 	return nil, fmt.Errorf("enable wal: %w", err)
+	// }
 
 	// Enable foreign key checks. For historical reasons, SQLite does not check
 	// foreign key constraints by default... which is kinda insane. There's some
@@ -52,7 +53,7 @@ func NewTaggedmarkService(dsn string) (*TaggedmarkService, error) {
 
 }
 
-func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmarks2.Taggedmark) error {
+func (ts *TaggedmarkService) CreateTaggedmark(ctx context.Context, tm *taggedmarks.Taggedmark) error {
 	err := withTx(ts.db, func(tx *sql.Tx) error {
 
 		// NOTE: if nothing is modified,

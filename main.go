@@ -11,8 +11,8 @@ import (
 	"github.com/bbkane/warg/section"
 	"github.com/bbkane/warg/value"
 
-	"github.com/bbkane/taggedmarks2"
 	"github.com/bbkane/taggedmarks2/moderncsqlitehandrolled"
+	taggedmarks "github.com/bbkane/taggedmarks2/taggedmarks"
 )
 
 func createTaggedmark(pf flag.PassedFlags) error {
@@ -23,18 +23,18 @@ func createTaggedmark(pf flag.PassedFlags) error {
 		tagsFlag = tagsF.([]string)
 	}
 
-	var ts taggedmarks2.TaggedmarkService
+	var ts taggedmarks.TaggedmarkService
 	ts, err := moderncsqlitehandrolled.NewTaggedmarkService(dbPath)
 	if err != nil {
 		return fmt.Errorf("db load errror: %w", err)
 	}
 
-	tags := []*taggedmarks2.Tag{}
+	tags := []*taggedmarks.Tag{}
 	for _, t := range tagsFlag {
-		tags = append(tags, &taggedmarks2.Tag{Name: t})
+		tags = append(tags, &taggedmarks.Tag{Name: t})
 	}
 
-	tm := &taggedmarks2.Taggedmark{
+	tm := &taggedmarks.Taggedmark{
 		URL:  url,
 		Tags: tags,
 	}
@@ -45,7 +45,7 @@ func createTaggedmark(pf flag.PassedFlags) error {
 		return err
 	}
 
-	fmt.Println(*tm)
+	fmt.Printf("%#v\n", *tm)
 	return nil
 }
 
