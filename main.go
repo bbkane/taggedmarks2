@@ -26,6 +26,18 @@ func main() {
 				),
 				flag.Required(),
 			),
+			section.Flag(
+				"--sql-backend",
+				"SQL Backend to use",
+				scalar.String(
+					scalar.Choices(
+						"moderncsqlite",
+					),
+					scalar.Default("moderncsqlite"),
+				),
+				flag.Alias("-s"),
+				flag.Required(),
+			),
 			section.Section(
 				"taggedmark",
 				"Taggedmark commands",

@@ -30,7 +30,10 @@ type TaggedmarkQuery struct {
 }
 
 type TaggedmarkService interface {
+	// CreateTaggedmark places the passed taggedmark into the database.
+	// Updates ID, CreateTime, and UpdateTime from the database
 	CreateTaggedmark(ctx context.Context, tm *Taggedmark) error
+
 	// ReadTaggedmark(ctx context.Context, id int) (*Taggedmark, error)
 	// UpdateTaggedmark(ctx context.Context, id int, upd TaggedmarkUpdate) (*Taggedmark, error)
 	// DeleteTaggedmark(ctx context.Context, id int) error
