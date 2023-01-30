@@ -1,29 +1,9 @@
-Let's try to do taggedmarks again, but following https://www.gobeyond.dev/wtf-dial/ and https://github.com/benbjohnson/wtf .
-
-I want to abstract the storage (and then use that to try different DB frameworks). I also want to use warg :D
-
-# SQL Things to Try
-
-- hand rolled
-- Ent
-- https://github.com/Masterminds/squirrel
-  - I don't think this support SQLite3
-- https://github.com/upper/db (need to fork to use modernc/sqlite?)
-
-# Other things to Try
-
-- GraphQL with Ent? It would be nice generate the graphql code
-- https://simonwillison.net/2021/Jul/1/pagnis/
-- https://lukeplant.me.uk/blog/posts/yagni-exceptions/
-
-# Error Handling
-
-- https://www.gobeyond.dev/failure-is-your-domain/
-  - I don't really like this
+A small CLI to save bookmarks to SQLite. I want to use it to experiment with different SQL libraries. All SQL libraries should be used to implement `TaggedmarkService` , which the CLI app instantiates and uses.
 
 # WTFDial Blog Notes
 
-https://www.gobeyond.dev/packages-as-layers/
+- https://www.gobeyond.dev/packages-as-layers/
+- https://github.com/benbjohnson/wtf
 
 Application types (really interfaces) in their own package - root package that other types depend on
 
@@ -41,20 +21,9 @@ The `wtf` package implements these servicces as interfaces. The `sqlite` package
 
 The cmd/wtfd package instantiates an HTTP server (which does *NOT* fulfil the interfaces, but contains them) and shoves the `SQLite` implementation into it.
 
-# TODO
-
-Let's start with the interface idea. We want to CRUDL taggedmarks, and we can make interfaces for that, then make a hand-rolled SQL implementation of that and a cli package to drive it... but first, lunch!
-
-- pass times into CreateDial instead of generating them there
-- move cmd/taggedmarks2 into root, and root into new package model
-- Get auth working, errors working, metrics?
-- get HTTP working
-
 # Questions
 
 - should my Tag struct have a reference to Taggedmark?
-
-
 
 # CLI
 
