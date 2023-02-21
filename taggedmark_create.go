@@ -36,7 +36,15 @@ func createTaggedmark(pf command.Context) error {
 	now := time.Now()
 	tags := []*taggedmarks.Tag{}
 	for _, t := range tagsFlag {
-		tags = append(tags, &taggedmarks.Tag{Name: t, CreateTime: now, UpdateTime: now})
+		tags = append(
+			tags,
+			&taggedmarks.Tag{
+				Name:       t,
+				CreateTime: now,
+				UpdateTime: now,
+				ID:         0,
+			},
+		)
 	}
 
 	tm := &taggedmarks.Taggedmark{
@@ -44,6 +52,7 @@ func createTaggedmark(pf command.Context) error {
 		Tags:       tags,
 		CreateTime: now,
 		UpdateTime: now,
+		ID:         0,
 	}
 
 	err := ts.CreateTaggedmark(context.Background(), tm)
